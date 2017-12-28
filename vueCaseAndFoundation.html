@@ -1,0 +1,122 @@
+<!--vue实例基础生命周期-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue实例与生命周期</title>
+</head>
+<body>
+    <div id="app" v-pre>
+        {{ a }}
+        {{这里的内容不会被编译}}
+    </div>
+    <div id="life">
+        {{ b }}
+    </div>
+    <div id="date">
+        {{ date }}
+    </div>
+    <div id="formatdate">
+        {{ formatdate | formatDate }}
+    </div>
+    <div id="arithmetic">
+        {{number / 10}}
+        <!--无法使用控制流，只能使用三元运算-->
+        {{isOk?'确定':'取消'}}
+        {{text.split(',')}}
+    </div>
+    <span id="ahref" v-html="link"></span>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        var myData = {a:1};
+        var app = new Vue({
+            el:"#app",
+            data : myData
+        });
+        console.log(app.a);
+        app.a = 2;
+        console.log(app.a);
+        /*生命周期*/
+        var life = new Vue({
+           el:"#life",
+           data:{
+               b : 2
+           },
+           created: function (){
+               console.log(this.b);
+           },
+           mounted: function () {
+               console.log(this.$el); //<div id="life"></div>
+           }
+        });
+
+        var date = new Vue({
+            el:"#date",
+            data:{
+                date:new Date()
+            },
+            mounted: function () {
+                var _this = this;//声明变量指向Vue实例
+                this.timer = setInterval(function () {
+                    _this.date = new Date();//修改Date
+                },1000);
+            },
+            beforeDestory: function () {
+                if (this.timer){
+                    clearInterval(this.timer);//在Vue实例销毁前，清除定时器
+                }
+            }
+        });
+
+        var ahref = new Vue({
+            el:"#ahref",
+            data:{
+                link:"<a href = 'http://www.baidu.com'>这是一个链接</a>"
+            }
+        });
+        var arithmetic = new Vue({
+            el:"#arithmetic",
+            data:{
+                number:10,
+                isOk:false,
+                text:'123,456'
+            }
+        });
+        /*过滤器格式化时间数据*/
+        var padDate = function (value) {
+            return value < 10 ? '0' + value : value;
+        };
+        var formatdate = new Vue({
+            el :"#formatdate",
+            data: {
+                formatdate :new Date()
+            },
+            filters: {
+                formatDate:function (value) {//这里的value就是需要过滤的数据
+                    var date = new Date(value);
+                    var year = date.getFullYear();
+                    var month = padDate(date.getMonth() + 1);
+                    var day = padDate(date.getDate());
+                    var hours = padDate(date.getHours());
+                    var minutes = padDate(date.getMinutes());
+                    var seconds = padDate(date.getSeconds());
+                    //将整理好的数据返回出去
+                    return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
+                }
+            },
+            mounted: function () {
+                var _this = this;//声明变量指向Vue实例
+                this.timer = setInterval(function () {
+                    _this.formatdate = new Date();//修改Date
+                },1000);
+            },
+            beforeDestory: function () {
+                if (this.timer){
+                    clearInterval(this.timer);//在Vue实例销毁前，清除定时器
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+<!--过滤器可以串联，也可以传参-->
