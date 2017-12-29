@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令与事件</title>
+</head>
+<body>
+    <div id="app">
+        <p v-if="show">显示这段文本</p>
+    </div>
+    <div id="bind">
+        <a v-bind:href="url">链接</a>
+        <img v-bind:src="imgUrl"/>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data:{
+                show:true
+            }
+        });
+        var bind =new Vue({
+            el:"#bind",
+            data:{
+                url:'https://www.github.com',
+                imgUrl:'http://XXX.XXX.xx/img.png'
+            }
+        });
+    </script>
+</body>
+</html>
